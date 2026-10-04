@@ -1,5 +1,0 @@
-pyTelegramBotAPI
-flask
-google-generativeai
-yfinance
-feedparser
