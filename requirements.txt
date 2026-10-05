@@ -1,0 +1,9 @@
+python-telegram-bot
+flask
+requests
+yfinance
+pandas
+numpy
+APScheduler
+google-generativeai
+feedparser
