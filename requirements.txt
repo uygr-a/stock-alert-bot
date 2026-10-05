@@ -1,6 +1,0 @@
-python-telegram-bot
-requests
-beautifulsoup4
-flask
-yfinance
-feedparser
