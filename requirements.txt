@@ -1,0 +1,8 @@
+python-telegram-bot
+yfinance
+pandas
+numpy
+flask
+requests
+apscheduler
+matplotlib
