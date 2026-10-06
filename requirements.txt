@@ -1,0 +1,7 @@
+yfinance
+pandas
+numpy
+flask
+python-telegram-bot
+requests
+curl_cffi
