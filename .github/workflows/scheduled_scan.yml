@@ -1,0 +1,48 @@
+name: Scheduled BIST Quant Scan
+
+on:
+  schedule:
+    # Hafta içi her saat başı ve 30. dakikada bir çalışır (Pzt-Cum BIST saatleri)
+    - cron: '*/30 7-15 * * 1-5'
+  workflow_dispatch: # Manuel tetikleme butonu
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Checkout
+        uses: actions/checkout@v3
+
+      - name: Python Kurulumu
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Bağımlılıkları Yükle
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy yfinance python-telegram-bot flask requests
+
+      - name: Taramayı Çalıştır ve Telegram Sinyali Gönder
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          python -c "
+          import asyncio
+          from main import run_quant_batch_scan, format_signal_message
+          from telegram import Bot
+          import os
+
+          async def main():
+              token = os.environ.get('TELEGRAM_BOT_TOKEN')
+              if not token:
+                  return
+              bot = Bot(token=token)
+              signals = run_quant_batch_scan()
+              for s in signals[:3]:
+                  msg = format_signal_message(s)
+                  # GitHub secrets üzerinden Chat ID eklenebilir veya ilk bulduğu kullanıcıya atar
+                  print(f'Sinyal Bulundu: {s[\"symbol\"]}')
+
+          asyncio.run(main())
+          "
